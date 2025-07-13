@@ -1,0 +1,74 @@
+.history-modal-overlay {
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(20, 24, 34, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.history-modal-window {
+  background: #181c24;
+  border-radius: 14px;
+  padding: 2rem 2.2rem 1.5rem 2.2rem;
+  box-shadow: 0 2px 24px rgba(56,189,248,0.13);
+  position: relative;
+  min-width: 320px;
+  max-width: 95vw;
+}
+.history-modal-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: #38bdf8;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+/* You can copy the rest of the modal content styles from MyProductsModal.css if needed */
+.modal-images {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+.modal-images img {
+  max-width: 120px;
+  max-height: 120px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #232946;
+}
+.modal-img-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #aaa;
+  font-size: 1.1rem;
+  justify-content: center;
+  min-width: 100px;
+  min-height: 100px;
+  background: #232946;
+  border-radius: 8px;
+}
+.fallback-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.3em;
+}
+.modal-info {
+  color: #e0e7ef;
+}
+.modal-info h2 {
+  color: #38bdf8;
+  margin-bottom: 0.5em;
+}
+.modal-price {
+  color: #38d39f;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 0.5em;
+}
+.modal-description {
+  margin: 1em 0;
+  color: #bfc9db;
+}

@@ -1,0 +1,63 @@
+.myreviews-page-container {
+  display: flex;
+  min-height: 100vh;
+  background: #181c24;
+}
+
+.myreviews-sidebar {
+  min-width: 180px;
+  background: #232946;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem 1.2rem 1.2rem 1.2rem;
+  gap: 1.2rem;
+  border-radius: 16px 0 0 16px;
+  box-shadow: 2px 0 12px rgba(56,189,248,0.07);
+}
+
+.myreviews-tab-btn {
+  background: #232946;
+  color: #38bdf8;
+  border: 1.5px solid #38bdf8;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  font-weight: 600;
+  font-size: 1.08rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.myreviews-tab-btn.active {
+  background: linear-gradient(90deg, #38bdf8 0%, #38d39f 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(56,189,248,0.10);
+}
+
+.myreviews-main {
+  flex: 1;
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  min-width: 0;
+}
+
+.myreviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.myreviews-empty {
+  color: #aaa;
+  text-align: center;
+  margin-top: 40px;
+  width: 100%;
+}
+
+.myreviews-loading {
+  color: #38bdf8;
+  text-align: center;
+  margin-top: 40px;
+  font-size: 1.2rem;
+}

@@ -1,0 +1,234 @@
+/* src/pages/user/UserHome.css */
+
+.user-home-container {
+  background: linear-gradient(120deg, #181c24 0%, #232946 100%);
+  color: #e0e7ef;
+  min-height: 100vh;
+}
+
+.content {
+  display: flex;
+  padding: 2.5rem 2rem 2rem 2rem;
+  gap: 2rem;
+}
+
+.filters {
+  flex: 0 0 260px;
+  background: linear-gradient(135deg, #232946 60%, #16161a 100%);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  border-radius: 18px;
+  margin-right: 2rem;
+  box-shadow: 0 2px 18px rgba(56,189,248,0.10);
+  border: 1px solid rgba(56,189,248,0.08);
+  position: sticky;
+  top: 2rem; /* Adjust as needed for your header/navbar height */
+  align-self: flex-start; /* Ensures sticky works in flex layouts */
+  z-index: 10;
+}
+
+.filters h3 {
+  margin-bottom: 1.2rem;
+  color: #38bdf8;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filters select,
+.filters input {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 1.1rem;
+  background-color: #232946;
+  border: 1px solid #2c2c2c;
+  border-radius: 7px;
+  color: #e0e7ef;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+.filters select:focus,
+.filters input:focus {
+  border: 1.5px solid #38bdf8;
+  outline: none;
+}
+
+.filters button {
+  width: 100%;
+  padding: 0.9rem;
+  background: linear-gradient(90deg, #38bdf8 0%, #2979ff 100%);
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  box-shadow: 0 2px 8px rgba(56,189,248,0.08);
+  transition: background 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.filters button:hover {
+  background: linear-gradient(90deg, #2979ff 0%, #38bdf8 100%);
+  transform: scale(1.04);
+}
+
+.product-list-section {
+  flex: 1;
+}
+
+.product-list-section h2 {
+  font-size: 1.35rem;
+  margin-top: 2.2rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 1.5px solid #232946;
+  padding-bottom: 0.5rem;
+  color: #e0e7ef;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.2rem;
+  padding: 1.5rem 2.5rem 0;
+}
+
+.request-btn,
+.sell-btn {
+  padding: 0.8rem 1.7rem;
+  font-size: 1.08rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s, background 0.3s;
+  box-shadow: 0 2px 8px rgba(56,189,248,0.08);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.request-btn {
+  background: linear-gradient(90deg, #7e57c2 0%, #38bdf8 100%);
+  color: white;
+}
+
+.sell-btn {
+  background: linear-gradient(90deg, #66bb6a 0%, #38bdf8 100%);
+  color: white;
+}
+
+.request-btn:hover {
+  background: linear-gradient(90deg, #38bdf8 0%, #7e57c2 100%);
+  transform: scale(1.06);
+}
+
+.sell-btn:hover {
+  background: linear-gradient(90deg, #38bdf8 0%, #66bb6a 100%);
+  transform: scale(1.06);
+}
+
+.no-products {
+  margin: 1.2rem 0;
+  color: #bbbbbb;
+  font-size: 1.05rem;
+  font-style: italic;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+/* Responsive/mobile styles for UserHome */
+
+@media (max-width: 900px) {
+  .content {
+    flex-direction: column;
+    padding: 1.2rem 0.5rem;
+    gap: 1.2rem;
+  }
+  .filters {
+    position: static;
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 1.5rem;
+    border-radius: 14px;
+    padding: 1.2rem 1rem 1rem 1rem;
+    box-shadow: 0 1px 8px rgba(56,189,248,0.08);
+  }
+  .product-list-section h2 {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    padding-bottom: 0.3rem;
+  }
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+    padding: 1rem 0.5rem 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .user-home-container {
+    min-height: 100vh;
+    padding: 0;
+  }
+  .filters {
+    padding: 1rem 0.5rem 0.7rem 0.5rem;
+    font-size: 0.98rem;
+  }
+  .filters h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.7rem;
+  }
+  .filters select,
+  .filters input {
+    font-size: 0.98rem;
+    padding: 0.6rem;
+    margin-bottom: 0.7rem;
+  }
+  .filters button {
+    font-size: 0.98rem;
+    padding: 0.7rem;
+  }
+  .product-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .product-list-section h2 {
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.7rem;
+  }
+  .request-btn,
+  .sell-btn {
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
+    border-radius: 7px;
+  }
+}
+
+@media (max-width: 400px) {
+  .filters,
+  .product-list-section,
+  .action-buttons {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .filters {
+    border-radius: 8px;
+  }
+}

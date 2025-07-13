@@ -1,0 +1,52 @@
+.cover-full-bg {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  background-color: #000000; /* Solid black background */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  z-index: 0;
+}
+.glass-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.121);
+  border-radius: 20px;
+  min-height: 400px;
+  max-width: 800px;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(186, 188, 233, 0.588);
+}
+.mascot-wrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 100vh;
+}
+
+.mascot-img {
+  max-height: 400px;
+  width: auto;
+  animation: floatUpDown 3s ease-in-out infinite;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.2));
+}
+
+.mascot-img:hover {
+  transform: scale(1.05);
+}
+
+@keyframes floatUpDown {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
