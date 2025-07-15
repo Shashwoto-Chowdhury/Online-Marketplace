@@ -4,134 +4,115 @@ const authorize = require('../../middleware/authorize');
 const pool = require('../../db');
 
 router.get('/nearbyproducts', authorize, async (req, res) => {
-    try {
-        const loc = await pool.query('SELECT location FROM "User" WHERE user_id = $1', [req.user.user_id]);
-        const userLocation = loc.rows[0].location;
-        const { category_id, sub_category_id, brand_id, min_price, max_price } = req.query;
+  try {
+    const loc = await pool.query('SELECT location FROM "User" WHERE user_id = $1', [req.user.user_id]);
+    const userLocation = loc.rows[0].location;
+    const { category_id, sub_category_id, brand_id, min_price, max_price, page, limit } = req.query;
+    const pageNum  = parseInt(page)  || 1;
+    const limitNum = parseInt(limit) || 10;
+    const offset   = (pageNum - 1) * limitNum;
 
-        let query = `SELECT DISTINCT ON (p.product_id) p.product_id, p.title, p.price, p.location, pi.image_url FROM "Product" p LEFT JOIN "ProductImage" pi ON p.product_id = pi.product_id WHERE quantity>0 AND location = $1`;
-        let values = [userLocation];
-        let index = 2;
-        // Add filters based on query parameters
-        if (category_id) {
-            query += ` AND category_id = $${index++}`;
-            values.push(category_id);
-        }
-        if (sub_category_id) {
-            query += ` AND sub_category_id = $${index++}`;
-            values.push(sub_category_id);
-        }
-        if (brand_id) {
-            query += ` AND brand_id = $${index++}`;
-            values.push(brand_id);
-        }
+    let query  = `SELECT DISTINCT ON (p.product_id)
+                     p.product_id, p.title, p.price, p.location, pi.image_url
+                  FROM "Product" p
+                  LEFT JOIN "ProductImage" pi ON p.product_id = pi.product_id
+                  WHERE p.quantity > 0 AND p.location = $1`;
+    const values = [userLocation];
+    let idx = 2;
 
-        if (min_price) {
-            query += ` AND price >= $${index++}`;
-            values.push(min_price);
-        }
+    if (category_id)      { query += ` AND p.category_id = $${idx}`;      values.push(category_id); idx++; }
+    if (sub_category_id)  { query += ` AND p.sub_category_id = $${idx}`;  values.push(sub_category_id); idx++; }
+    if (brand_id)         { query += ` AND p.brand_id = $${idx}`;         values.push(brand_id); idx++; }
+    if (min_price)        { query += ` AND p.price >= $${idx}`;          values.push(min_price); idx++; }
+    if (max_price)        { query += ` AND p.price <= $${idx}`;          values.push(max_price); idx++; }
 
-        if (max_price) {
-            query += ` AND price <= $${index++}`;
-            values.push(max_price);
-        }
-        query += ` AND p.seller_id != $${index++}`; // Exclude products from the same user
-        values.push(req.user.user_id);
-        // Execute the query
-        const result = await pool.query(query, values);
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Error fetching products:', err);
-        res.status(500).json({ error: 'Server error' });
-    }
+    // exclude own products
+    query += ` AND p.seller_id != $${idx}`; values.push(req.user.user_id); idx++;
+
+    // add ordering, paging
+    query += ` ORDER BY p.product_id`;
+    query += ` OFFSET $${idx} LIMIT $${idx + 1}`;
+    values.push(offset, limitNum);
+
+    const result = await pool.query(query, values);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching products:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
+
 router.get('/companyproducts', authorize, async (req, res) => {
-    try {
-        const { category_id, sub_category_id, brand_id, min_price, max_price } = req.query;
-        // Fetch products from companies, excluding the current user's products
-        let query = `SELECT distinct on(p.product_id) p.product_id, p.title, p.price, p.location, pi.image_url
-                    FROM "Product" p 
-                    LEFT JOIN "ProductImage" pi on p.product_id=pi.product_id
-                    LEFT JOIN "User" u on p.seller_id=u.user_id
-                    WHERE p.quantity>0 AND u.type='company'`;
-        let values = [];
-        let index = 1;
+  try {
+    const { category_id, sub_category_id, brand_id, min_price, max_price, page, limit } = req.query;
+    const pageNum  = parseInt(page)  || 1;
+    const limitNum = parseInt(limit) || 10;
+    const offset   = (pageNum - 1) * limitNum;
 
-        if (category_id) {
-            query += ` AND p.category_id = $${index++}`;
-            values.push(category_id);
-        }
-        if (sub_category_id) {
-            query += ` AND p.sub_category_id = $${index++}`;
-            values.push(sub_category_id);
-        }
-        if (brand_id) {
-            query += ` AND p.brand_id = $${index++}`;
-            values.push(brand_id);
-        }
+    let query  = `SELECT DISTINCT ON (p.product_id)
+                     p.product_id, p.title, p.price, p.location, pi.image_url
+                  FROM "Product" p
+                  LEFT JOIN "ProductImage" pi ON p.product_id = pi.product_id
+                  LEFT JOIN "User" u ON p.seller_id = u.user_id
+                  WHERE p.quantity > 0 AND u.type = 'company'`;
+    const values = [];
+    let idx = 1;
 
-        if (min_price) {
-            query += ` AND p.price >= $${index++}`;
-            values.push(min_price);
-        }
+    if (category_id)      { query += ` AND p.category_id = $${idx}`;      values.push(category_id); idx++; }
+    if (sub_category_id)  { query += ` AND p.sub_category_id = $${idx}`;  values.push(sub_category_id); idx++; }
+    if (brand_id)         { query += ` AND p.brand_id = $${idx}`;         values.push(brand_id); idx++; }
+    if (min_price)        { query += ` AND p.price >= $${idx}`;          values.push(min_price); idx++; }
+    if (max_price)        { query += ` AND p.price <= $${idx}`;          values.push(max_price); idx++; }
 
-        if (max_price) {
-            query += ` AND p.price <= $${index++}`;
-            values.push(max_price);
-        }
-        query += ` AND p.seller_id != $${index++}`; // Exclude products from the same user
-        values.push(req.user.user_id);
+    query += ` AND p.seller_id != $${idx}`; values.push(req.user.user_id); idx++;
 
-        const result = await pool.query(query, values);
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Error fetching products:', err);
-        res.status(500).json({ error: 'Server error' });
-    }
+    query += ` ORDER BY p.product_id`;
+    query += ` OFFSET $${idx} LIMIT $${idx + 1}`;
+    values.push(offset, limitNum);
+
+    const result = await pool.query(query, values);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching products:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
+
 router.get('/allproducts', authorize, async (req, res) => {
-    try {
-        const { category_id, sub_category_id, brand_id, min_price, max_price } = req.query;
+  try {
+    const { category_id, sub_category_id, brand_id, min_price, max_price, page, limit } = req.query;
+    const pageNum  = parseInt(page)  || 1;
+    const limitNum = parseInt(limit) || 10;
+    const offset   = (pageNum - 1) * limitNum;
 
-        let query = `SELECT DISTINCT ON (p.product_id) p.product_id, p.title, p.price, p.location, pi.image_url
-                    FROM "Product" p 
-                    LEFT JOIN "ProductImage" pi ON p.product_id = pi.product_id
-                    WHERE p.quantity > 0`;
-        let values = [];
-        let index = 1;
+    let query  = `SELECT DISTINCT ON (p.product_id)
+                     p.product_id, p.title, p.price, p.location, pi.image_url
+                  FROM "Product" p
+                  LEFT JOIN "ProductImage" pi ON p.product_id = pi.product_id
+                  WHERE p.quantity > 0`;
+    const values = [];
+    let idx = 1;
 
-        if (category_id) {
-            query += ` AND p.category_id = $${index++}`;
-            values.push(category_id);
-        }
-        if (sub_category_id) {
-            query += ` AND p.sub_category_id = $${index++}`;
-            values.push(sub_category_id);
-        }
-        if (brand_id) {
-            query += ` AND p.brand_id = $${index++}`;
-            values.push(brand_id);
-        }
+    if (category_id)      { query += ` AND p.category_id = $${idx}`;      values.push(category_id); idx++; }
+    if (sub_category_id)  { query += ` AND p.sub_category_id = $${idx}`;  values.push(sub_category_id); idx++; }
+    if (brand_id)         { query += ` AND p.brand_id = $${idx}`;         values.push(brand_id); idx++; }
+    if (min_price)        { query += ` AND p.price >= $${idx}`;          values.push(min_price); idx++; }
+    if (max_price)        { query += ` AND p.price <= $${idx}`;          values.push(max_price); idx++; }
 
-        if (min_price) {
-            query += ` AND p.price >= $${index++}`;
-            values.push(min_price);
-        }
+    query += ` AND p.seller_id != $${idx}`; values.push(req.user.user_id); idx++;
 
-        if (max_price) {
-            query += ` AND p.price <= $${index++}`;
-            values.push(max_price);
-        }
-        query += ` AND p.seller_id != $${index++}`; // Exclude products from the same user
-        values.push(req.user.user_id);
+    query += ` ORDER BY p.product_id`;
+    query += ` OFFSET $${idx} LIMIT $${idx + 1}`;
+    values.push(offset, limitNum);
 
-        const result = await pool.query(query, values);
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Error fetching products:', err);
-        res.status(500).json({ error: 'Server error' });
-    }
+    const result = await pool.query(query, values);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching products:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
+
 // Filter endpoints for categories, subcategories, and brands
 router.get('/filter/categories', authorize, async (req, res) => {
     try {

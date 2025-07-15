@@ -151,6 +151,50 @@
   letter-spacing: 0.01em;
 }
 
+/* Pagination wrapper adjustments */
+.product-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  position: relative;
+  z-index: 10;            /* ensure it's above cards */
+}
+
+/* Page buttons */
+.product-pagination button {
+  background: linear-gradient(90deg, #38bdf8 0%, #38d39f 100%);
+  color: #1e293b;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+/* Disabled state */
+.product-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Hover effect */
+.product-pagination button:not(:disabled):hover {
+  background: linear-gradient(90deg, #38d39f 0%, #38bdf8 100%);
+  transform: translateY(-2px);
+}
+
+/* Page indicator text */
+.product-pagination span {
+  color: #e0e7ef;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
 /* Responsive/mobile styles for UserHome */
 
 @media (max-width: 900px) {

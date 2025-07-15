@@ -1,5 +1,5 @@
 // src/pages/user/UserHome.jsx
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { FaFilter, FaBoxOpen, FaBuilding, FaGlobe, FaPlusCircle, FaTags } from 'react-icons/fa';
 import './UserHome.css';
 import ProductCard from '../ProductCard';
@@ -8,105 +8,84 @@ import LoadingSpinner from '../LoadingSpinner';
 import { useNavigate } from 'react-router-dom';
 import ProductDetailsModal from '../ProductDetailsModal';
 
+const ITEMS_PER_PAGE = 10;
+
 function UserHome({ setIsAuthenticated, setRole }) {
   const [nearbyProducts, setNearbyProducts] = useState([]);
   const [companyProducts, setCompanyProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
-  const [filters, setFilters] = useState({
-    category_id: '',
-    sub_category_id: '',
-    brand_id: '',
-    min_price: '',
-    max_price: '',
-  });
+  const [filters, setFilters] = useState({ category_id: '', sub_category_id: '', brand_id: '', min_price: '', max_price: '' });
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openProductId, setOpenProductId] = useState(null);
+  const [nearbyPage, setNearbyPage]     = useState(1);
+  const [companyPage, setCompanyPage]   = useState(1);
+  const [allPage, setAllPage]           = useState(1);
+
   const navigate = useNavigate();
-
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
   const token = localStorage.getItem('token');
-  const authHeader = { headers: { token } };
+  const authHeader = useMemo(() => ({ headers: { token } }), [token])
 
-  useEffect(() => {
-    fetch(`${API_BASE_URL}/users/homepage/nearbyproducts`, {
-      method: 'GET',
-      ...authHeader,
-    })
-      .then(res => res.json())
-      .then(data => setNearbyProducts(data));
-
-    fetch(`${API_BASE_URL}/users/homepage/companyproducts`, {
-      method: 'GET',
-      ...authHeader,
-    })
-      .then(res => res.json())
-      .then(data => setCompanyProducts(data));
-
-    fetch(`${API_BASE_URL}/users/homepage/allproducts`, {
-      method: 'GET',
-      ...authHeader,
-    })
-      .then(res => res.json())
-      .then(data => setAllProducts(data));
-  }, []);
-
-  useEffect(() => {
-    fetch(`${API_BASE_URL}/users/homepage/filter/categories`, {
-      method: 'GET',
-      ...authHeader,
-    })
-      .then(res => res.json())
-      .then(data => setCategories(data));
-
-    fetch(`${API_BASE_URL}/users/homepage/filter/brands`, {
-      method: 'GET',
-      ...authHeader,
-    })
-      .then(res => res.json())
-      .then(data => setBrands(data));
-  }, []);
-
+  // clear subcats when category changes
   useEffect(() => {
     if (filters.category_id) {
-      fetch(`${API_BASE_URL}/users/homepage/filter/subcategories?category_id=${filters.category_id}`, {
-        method: 'GET',
-        ...authHeader,
-      })
-        .then(res => res.json())
-        .then(data => setSubcategories(data));
+      fetch(`${API_BASE_URL}/users/homepage/filter/subcategories?category_id=${filters.category_id}`, authHeader)
+        .then(r => r.json()).then(setSubcategories);
     } else {
       setSubcategories([]);
     }
   }, [filters.category_id]);
 
-  const handleFilterChange = useCallback((e) => {
-    setFilters(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  // fetch category + brand lists once
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/users/homepage/filter/categories`, authHeader)
+      .then(r => r.json()).then(setCategories);
+    fetch(`${API_BASE_URL}/users/homepage/filter/brands`, authHeader)
+      .then(r => r.json()).then(setBrands);
   }, []);
 
-  const handleFilterSubmit = useCallback(async () => {
+  // master loader for all three sections:
+  const loadSections = useCallback(async () => {
     setLoading(true);
-    const query = new URLSearchParams(filters).toString();
 
-    const fetchFiltered = async (endpoint, setter) => {
-      const res = await fetch(`${API_BASE_URL}/users/homepage/${endpoint}?${query}`, {
-        method: 'GET',
-        ...authHeader,
-      });
+    const fetchSection = async (endpoint, setter, page) => {
+      const params = new URLSearchParams({ ...filters, page, limit: ITEMS_PER_PAGE });
+      const res = await fetch(
+        `${API_BASE_URL}/users/homepage/${endpoint}?${params}`,
+        authHeader
+      );
       const data = await res.json();
       setter(data);
     };
 
     await Promise.all([
-      fetchFiltered('nearbyproducts', setNearbyProducts),
-      fetchFiltered('companyproducts', setCompanyProducts),
-      fetchFiltered('allproducts', setAllProducts),
+      fetchSection('nearbyproducts', setNearbyProducts, nearbyPage),
+      fetchSection('companyproducts', setCompanyProducts, companyPage),
+      fetchSection('allproducts', setAllProducts, allPage),
     ]);
+
     setLoading(false);
-  }, [API_BASE_URL, authHeader, filters]);
+  }, [API_BASE_URL, authHeader, filters, nearbyPage, companyPage, allPage]);
+
+  // run on mount + whenever filters or any page changes
+  useEffect(() => {
+    loadSections();
+  }, [loadSections]);
+
+  // reset pages on filter submit
+  const handleFilterSubmit = useCallback(() => {
+    setNearbyPage(1);
+    setCompanyPage(1);
+    setAllPage(1);
+    // removed sessionStorage.clear calls
+  }, [setNearbyPage, setCompanyPage, setAllPage]);
+
+  const handleFilterChange = useCallback((e) => {
+    setFilters(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  }, []);
 
   const handleProductClick = useCallback((id) => setOpenProductId(id), []);
 
@@ -171,68 +150,50 @@ function UserHome({ setIsAuthenticated, setRole }) {
             <LoadingSpinner />
           ) : (
             <>
-              <h2>
-                <FaBoxOpen style={{ marginRight: 8, color: '#38bdf8', verticalAlign: 'middle' }} />
-                Nearby Products
-              </h2>
+              {/* Nearby Products */}
+              <h2><FaBoxOpen style={{ marginRight: 8, color: '#38bdf8', verticalAlign: 'middle' }} /> Nearby Products</h2>
               <div className="product-list">
-                {nearbyProducts.length > 0 ? (
-                  nearbyProducts.map(product => (
-                    <ProductCard
-                      key={product.product_id}
-                      product={product}
-                      onClick={() => handleProductClick(product.product_id)}
-                    />
-                  ))
-                ) : (
-                  <p className="no-products">No nearby products found.</p>
-                )}
+                {nearbyProducts.length > 0
+                  ? nearbyProducts.map(p => <ProductCard key={p.product_id} product={p} onClick={() => handleProductClick(p.product_id)} />)
+                  : <p className="no-products">No nearby products found.</p>}
+              </div>
+              <div className="product-pagination">
+                <button disabled={nearbyPage === 1 || loading} onClick={() => setNearbyPage(n => n - 1)}>Previous</button>
+                <span>Page {nearbyPage}</span>
+                <button disabled={nearbyProducts.length < ITEMS_PER_PAGE || loading} onClick={() => setNearbyPage(n => n + 1)}>Next</button>
               </div>
 
-              <h2>
-                <FaBuilding style={{ marginRight: 8, color: '#90caf9', verticalAlign: 'middle' }} />
-                Company Products
-              </h2>
+              {/* Company Products */}
+              <h2><FaBuilding style={{ marginRight: 8, color: '#90caf9', verticalAlign: 'middle' }} /> Company Products</h2>
               <div className="product-list">
-                {companyProducts.length > 0 ? (
-                  companyProducts.map(product => (
-                    <ProductCard
-                      key={product.product_id}
-                      product={product}
-                      onClick={() => handleProductClick(product.product_id)}
-                    />
-                  ))
-                ) : (
-                  <p className="no-products">No company products found.</p>
-                )}
+                {companyProducts.length > 0
+                  ? companyProducts.map(p => <ProductCard key={p.product_id} product={p} onClick={() => handleProductClick(p.product_id)} />)
+                  : <p className="no-products">No company products found.</p>}
+              </div>
+              <div className="product-pagination">
+                <button disabled={companyPage === 1 || loading} onClick={() => setCompanyPage(n => n - 1)}>Previous</button>
+                <span>Page {companyPage}</span>
+                <button disabled={companyProducts.length < ITEMS_PER_PAGE || loading} onClick={() => setCompanyPage(n => n + 1)}>Next</button>
               </div>
 
-              <h2>
-                <FaGlobe style={{ marginRight: 8, color: '#ffca28', verticalAlign: 'middle' }} />
-                All Products
-              </h2>
+              {/* All Products */}
+              <h2><FaGlobe  style={{ marginRight: 8, color: '#ffca28', verticalAlign: 'middle' }} /> All Products</h2>
               <div className="product-list">
-                {allProducts.length > 0 ? (
-                  allProducts.map(product => (
-                    <ProductCard
-                      key={product.product_id}
-                      product={product}
-                      onClick={() => handleProductClick(product.product_id)}
-                    />
-                  ))
-                ) : (
-                  <p className="no-products">No products found.</p>
-                )}
+                {allProducts.length > 0
+                  ? allProducts.map(p => <ProductCard key={p.product_id} product={p} onClick={() => handleProductClick(p.product_id)} />)
+                  : <p className="no-products">No products found.</p>}
+              </div>
+              <div className="product-pagination">
+                <button disabled={allPage === 1 || loading} onClick={() => setAllPage(n => n - 1)}>Previous</button>
+                <span>Page {allPage}</span>
+                <button disabled={allProducts.length < ITEMS_PER_PAGE || loading} onClick={() => setAllPage(n => n + 1)}>Next</button>
               </div>
             </>
           )}
         </main>
       </div>
       {openProductId && (
-        <ProductDetailsModal
-          productId={openProductId}
-          onClose={() => setOpenProductId(null)}
-        />
+        <ProductDetailsModal productId={openProductId} onClose={() => setOpenProductId(null)} />
       )}
     </div>
   );
