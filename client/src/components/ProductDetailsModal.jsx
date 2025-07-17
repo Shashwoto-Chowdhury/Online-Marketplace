@@ -81,7 +81,25 @@ function ProductDetailsModal({ productId, onClose }) {
                 <FaTag style={{ marginRight: 8, color: '#38bdf8' }} />
                 {product.title}
               </h2>
-              <p className="productdetails-modal-price">$ {product.price}</p>
+
+              {product.offer_percentage > 0 ? (
+                <div className="productdetails-modal-price-container">
+                  <span className="productdetails-modal-old-price">
+                    ${Number(product.price).toFixed(2)}
+                  </span>
+                  <span className="productdetails-modal-new-price">
+                    ${(Number(product.price) * (1 - Number(product.offer_percentage) / 100)).toFixed(2)}
+                  </span>
+                  <span className="productdetails-modal-discount-badge">
+                    -{Number(product.offer_percentage)}%
+                  </span>
+                </div>
+              ) : (
+                <p className="productdetails-modal-price">
+                  ${Number(product.price).toFixed(2)}
+                </p>
+              )}
+
               <p>
                 <FaMapMarkerAlt style={{ marginRight: 6, color: '#a5b4fc' }} />
                 {product.location}

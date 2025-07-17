@@ -144,6 +144,39 @@
 .productdetails-modal-convo-btn:hover {
   background: linear-gradient(90deg, #38bdf8 0%, #66bb6a 100%);
 }
+
+/* Price styling */
+.productdetails-modal-price-container {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.productdetails-modal-old-price {
+  color: #a1a1aa;
+  text-decoration: line-through;
+  font-size: 1rem;
+}
+
+.productdetails-modal-new-price {
+  color: #fff176;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.productdetails-modal-discount-badge {
+  background: #28ff41;
+  color: #1e293b;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  display: inline-block;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
 @media (max-width: 600px) {
   .productdetails-modal-window {
     width: 98vw;

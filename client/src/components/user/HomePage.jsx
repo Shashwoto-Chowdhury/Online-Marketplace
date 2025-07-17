@@ -8,7 +8,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import { useNavigate } from 'react-router-dom';
 import ProductDetailsModal from '../ProductDetailsModal';
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 12;
 
 function UserHome({ setIsAuthenticated, setRole }) {
   const [nearbyProducts, setNearbyProducts] = useState([]);

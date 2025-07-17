@@ -1,0 +1,38 @@
+.offer-card {
+  position: relative;
+  background: linear-gradient(135deg, #232946 70%, #16161a 100%);
+  border: 2px solid #38bdf8;
+  border-radius: 12px;
+  padding: 1rem;
+  color: #e0e7ef;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.offer-card-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 0.3rem;
+}
+.offer-edit-btn,
+.offer-delete-btn {
+  background: none;
+  border: none;
+  color: #38bdf8;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.offer-edit-btn:hover {
+  color: #38d39f;
+}
+.offer-delete-btn:hover {
+  color: #f43f5e;
+}
+.offer-card-content p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+.offer-card-content span {
+  font-weight: 500;
+  color: #38bdf8;
+}

@@ -10,6 +10,7 @@ import WishlistPage from './components/user/WishlistPage';
 import RequestsPage from './components/user/RequestsPage';
 import HistoryPage from './components/user/HistoryPage';
 import MyReviewsPage from './components/user/MyReviewsPage';
+import OfferPage from './components/user/OfferPage';
 import AdminNavbar from './components/admin/AdminNavbar';
 import AdminDashboard from './components/admin/Dashboard';
 import { useState, useEffect, Fragment } from 'react';
@@ -137,6 +138,12 @@ function App() {
             path="/user/reviews"
             element={
               isAuthenticated ? role === 'user' ? <MyReviewsPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
+            }
+          />
+          <Route
+            path="/user/offers"
+            element={
+              isAuthenticated ? role === 'user' ? <OfferPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
             }
           />
 

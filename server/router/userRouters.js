@@ -14,5 +14,6 @@ router.use('/historypage', require('./user/historypage'));
 router.use('/productdelete', require('./user/ProductDelete'));
 router.use('/upgrade-request', require('./user/sendcompanyrequest'));
 router.use('/productreport', require('./user/productreport'));
+router.use('/offers', require('./user/offers'));
 
 module.exports = router;
