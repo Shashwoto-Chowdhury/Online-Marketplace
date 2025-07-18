@@ -61,3 +61,44 @@
   margin-top: 40px;
   font-size: 1.2rem;
 }
+
+/* Mobile: stack sidebar and main content */
+@media (max-width: 768px) {
+  .myreviews-page-container {
+    flex-direction: column;
+  }
+  .myreviews-sidebar {
+    flex-direction: row;
+    width: 100%;
+    min-width: auto;
+    padding: 0.8rem 0.5rem;
+    border-radius: 0 0 16px 16px;
+    gap: 0.5rem;
+    overflow-x: auto;
+    box-shadow: none;
+  }
+  .myreviews-tab-btn {
+    flex: 1 0 auto;
+    white-space: nowrap;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+  }
+  .myreviews-main {
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* Mobile narrow: adjust text sizes */
+@media (max-width: 480px) {
+  .myreviews-tab-btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.8rem;
+  }
+  .myreviews-loading,
+  .myreviews-empty {
+    font-size: 1rem;
+  }
+  .myreviews-list {
+    gap: 1rem;
+  }
+}

@@ -50,3 +50,92 @@
     transform: translateY(-10px);
   }
 }
+
+/* Mobile tablets and below */
+@media (max-width: 768px) {
+  .cover-full-bg {
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .glass-card {
+    margin: 0 auto;
+    max-width: 90%;
+    padding: 2rem 1.5rem;
+  }
+  .mascot-wrapper {
+    margin: 1.5rem auto 0;
+    max-height: 300px;
+  }
+  .mascot-img {
+    max-height: 250px;
+    animation: floatUpDown 3s ease-in-out infinite;
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+  /* ensure stacked items are perfectly centered */
+  .cover-full-bg {
+    justify-content: center;   /* center children vertically in column */
+    align-items: center;       /* center children horizontally */
+    padding: 1rem;             /* reduce side padding */
+  }
+
+  /* give the glass card its own bottom margin and center it */
+  .glass-card {
+    margin: 0 auto 2rem;       /* top 0, horizontal auto, bottom 2rem */
+    max-width: 90%;
+    padding: 1.2rem 1rem;
+  }
+
+  /* push mascot further down so it never overlaps the card */
+  .mascot-wrapper {
+    margin: 2rem auto 0;       /* more top space, center horizontally */
+    max-height: 200px;
+  }
+
+  .mascot-img {
+    max-height: 180px;
+    width: auto;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Mobile phones: override ms-5/me-4, center the glass‐card & buttons
+------------------------------------------------------------------ */
+@media (max-width: 480px) {
+  .glass-card {
+    /* kill the left/right margins from ms-5, me-4 */
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 2.5rem !important; 
+
+    /* make it almost full‐width */
+    width: 95% !important;
+    max-width: 95% !important;
+
+    /* tighten up the padding */
+    padding: 1.2rem 1rem !important;
+  }
+
+  /* stack the two buttons and make them full width */
+  .glass-card .d-flex {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.8rem;
+  }
+  .glass-card .btn {
+    width: 100%;
+    max-width: none;
+  }
+
+  /* push the mascot further down */
+  .mascot-wrapper {
+    margin: 3rem auto 0 !important;
+    max-height: 200px;
+  }
+  .mascot-img {
+    max-height: 180px;
+  }
+}

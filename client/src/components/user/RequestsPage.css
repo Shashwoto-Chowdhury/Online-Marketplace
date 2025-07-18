@@ -116,3 +116,49 @@
 .requests-page .request-modal-action-btn.green {
   background: linear-gradient(90deg, #38d39f 0%, #38bdf8 100%);
 }
+
+/* Mobile compatibility */
+@media (max-width: 768px) {
+  .requests-page .requests-tabs {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+    padding: 0.8rem 0;
+  }
+  .requests-page .requests-tab-btn {
+    flex: 1 1 40%;
+    min-width: 140px;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+  }
+  .requests-list-container {
+    margin: 0.5rem;
+    padding: 0;
+    max-width: none;
+  }
+  .request-card {
+    padding: 1rem;
+    margin: 0.8rem 0;
+  }
+  .requests-page .modal-window {
+    width: 90vw;
+    max-width: 360px;
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .requests-page .requests-tab-btn {
+    flex: 1 1 100%;
+    min-width: auto;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+  .request-card h3 {
+    font-size: 1.1rem;
+  }
+  .request-card p,
+  .request-card .request-location {
+    font-size: 0.9rem;
+  }
+}

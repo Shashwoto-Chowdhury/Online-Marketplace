@@ -74,3 +74,59 @@ form button {
 form button:hover {
   background: #1a5edb;
 }
+
+/* Tablets and below */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 1rem;
+    height: auto;
+    align-items: flex-start;
+  }
+  .login-box {
+    width: 100%;
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+  }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+  .login-container {
+    /* ensure full viewport coverage on mobile */
+    min-height: 100vh;
+     padding: 1rem;
+     align-items: flex-start;
+  }
+  .login-box {
+    padding: 1.5rem;
+    margin: 1.5rem auto;
+    max-width: 90%;
+  }
+  .login-title {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+  .login-toggle {
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+  .login-toggle button {
+    width: 100%;
+    padding: 0.4rem 0;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  form input {
+    padding: 0.6rem;
+    font-size: 0.95rem;
+  }
+  form button {
+    padding: 0.6rem;
+    font-size: 0.95rem;
+  }
+  p {
+    font-size: 0.9rem;
+  }
+}
