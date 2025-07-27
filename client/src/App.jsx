@@ -19,6 +19,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar'; // If you want Navbar at the top level
 import './App.css';
+import { ChatProvider } from './context/ChatContext';
+import ConversationsPage from './components/Chat/ConversationsPage';
+import ChatWindow from './components/Chat/ChatWindow';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -80,81 +83,85 @@ function App() {
       <ToastContainer position="top-right" autoClose={3000} />
       <Router>
         {/* If you want Navbar globally, uncomment below: */}
-        {isAuthenticated && role === 'user' && <Navbar setIsAuthenticated={setIsAuthenticated} setRole={setRole} />}
         {isAuthenticated && role === 'admin' && <AdminNavbar setIsAuthenticated={setIsAuthenticated} setRole={setRole} />}
-        <Routes>
-          <Route path="/" element={!isAuthenticated ? <CoverPage /> : <Navigate to={role === 'admin' ? "/admin/dashboard" : "/user/home"} />} />
-          <Route
-            path="/login"
-            element={!isAuthenticated ? <LoginPage setAuth={setIsAuthenticated} setRole={setRole} /> : role==='user'? <Navigate to="/user/home" /> : <Navigate to="/admin/dashboard" />}
-          />
-          <Route
-            path="/register"
-            element={!isAuthenticated ? <RegisterPage setAuth={setIsAuthenticated} setRole={setRole} /> : role === 'admin' ? <Navigate to="/admin/dashboard" /> : <Navigate to="/user/home" />}
-          />
-          <Route
-            path="/user/home"
-            element={
-              isAuthenticated ? role === 'user' ? <UserHome setIsAuthenticated={setIsAuthenticated} setRole={setRole} /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
-            }
-          />
-          <Route
-            path="/user/details"
-            element={
-              isAuthenticated ? role === 'user' ? <UserDetails /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
-            }
-          />
-          <Route
-            path="/user/sell"
-            element={
-              isAuthenticated ? role === 'user' ? <SellProduct /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
-            }
-          />
-          <Route
-            path="/user/requestproduct"
-            element={
-              isAuthenticated ? role === 'user' ? <RequestProduct /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
-            }
-          />
-          <Route
-            path="/user/wishlist"
-            element={
-              isAuthenticated ? role === 'user' ? <WishlistPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
-            }
-          />
-          <Route
-            path="/user/requests"
-            element={
-              isAuthenticated ? role === 'user' ? <RequestsPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
-            }
-          />
-          <Route
-            path="/user/history"
-            element={
-              isAuthenticated ? role === 'user' ? <HistoryPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
-            }
-          />
-          <Route
-            path="/user/reviews"
-            element={
-              isAuthenticated ? role === 'user' ? <MyReviewsPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
-            }
-          />
-          <Route
-            path="/user/offers"
-            element={
-              isAuthenticated ? role === 'user' ? <OfferPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
-            }
-          />
+        <ChatProvider>
+          {isAuthenticated && role === 'user' && <Navbar setIsAuthenticated={setIsAuthenticated} setRole={setRole} />}
+          <Routes>
+            <Route path="/" element={!isAuthenticated ? <CoverPage /> : <Navigate to={role === 'admin' ? "/admin/dashboard" : "/user/home"} />} />
+            <Route
+              path="/login"
+              element={!isAuthenticated ? <LoginPage setAuth={setIsAuthenticated} setRole={setRole} /> : role==='user'? <Navigate to="/user/home" /> : <Navigate to="/admin/dashboard" />}
+            />
+            <Route
+              path="/register"
+              element={!isAuthenticated ? <RegisterPage setAuth={setIsAuthenticated} setRole={setRole} /> : role === 'admin' ? <Navigate to="/admin/dashboard" /> : <Navigate to="/user/home" />}
+            />
+            <Route
+              path="/user/home"
+              element={
+                isAuthenticated ? role === 'user' ? <UserHome setIsAuthenticated={setIsAuthenticated} setRole={setRole} /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/user/details"
+              element={
+                isAuthenticated ? role === 'user' ? <UserDetails /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/user/sell"
+              element={
+                isAuthenticated ? role === 'user' ? <SellProduct /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/user/requestproduct"
+              element={
+                isAuthenticated ? role === 'user' ? <RequestProduct /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/user/wishlist"
+              element={
+                isAuthenticated ? role === 'user' ? <WishlistPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/user/requests"
+              element={
+                isAuthenticated ? role === 'user' ? <RequestsPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/user/history"
+              element={
+                isAuthenticated ? role === 'user' ? <HistoryPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/user/reviews"
+              element={
+                isAuthenticated ? role === 'user' ? <MyReviewsPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/user/offers"
+              element={
+                isAuthenticated ? role === 'user' ? <OfferPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
+              }
+            />
+            <Route path="/user/messages" element={<ConversationsPage />} />
+            <Route path="/user/chat/:id" element={<ChatWindow />} />
 
-          {/* Admin Routes */}
-          <Route
-            path="/admin/dashboard"
-            element={
-              isAuthenticated ? role === 'admin' ? <AdminDashboard /> : <Navigate to="/user/home" /> : <Navigate to="/" />
-            }
-          />
-        </Routes>
+            {/* Admin Routes */}
+            <Route
+              path="/admin/dashboard"
+              element={
+                isAuthenticated ? role === 'admin' ? <AdminDashboard /> : <Navigate to="/user/home" /> : <Navigate to="/" />
+              }
+            />
+          </Routes>
+        </ChatProvider>
       </Router>
     </Fragment>
   );

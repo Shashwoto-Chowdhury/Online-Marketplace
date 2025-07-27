@@ -46,7 +46,7 @@ router.get('/all', authorize, async (req, res) => {
 router.get('/details', authorize, async (req, res) => {
     try {
         const { request_id } = req.query;
-        const requestDetails = await pool.query(`SELECT p.request_id, p.title, p.description, p.location, c.name as category, s.name as sub_category, b.name as brand, u.name as requester_name FROM "ProductRequest" p JOIN "User" u ON p.requester_id = u.user_id JOIN "Category" c ON p.category_id = c.category_id JOIN "SubCategory" s ON p.sub_category_id = s.sub_category_id JOIN "Brand" b ON p.brand_id = b.brand_id WHERE p.request_id = $1`, [request_id]);
+        const requestDetails = await pool.query(`SELECT p.request_id, p.requester_id, p.title, p.description, p.location, c.name as category, s.name as sub_category, b.name as brand, u.name as requester_name FROM "ProductRequest" p JOIN "User" u ON p.requester_id = u.user_id JOIN "Category" c ON p.category_id = c.category_id JOIN "SubCategory" s ON p.sub_category_id = s.sub_category_id JOIN "Brand" b ON p.brand_id = b.brand_id WHERE p.request_id = $1`, [request_id]);
 
         if (requestDetails.rows.length === 0) {
             return res.status(404).json({ message: 'Request not found' });

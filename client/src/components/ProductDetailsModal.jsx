@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FaTimes, FaHeart, FaRegHeart, FaMapMarkerAlt, FaTag, FaUserCircle, FaComments, FaImage, FaSortAmountUp } from 'react-icons/fa';
 import './ProductDetailsModal.css';
+import { useChat } from '../context/ChatContext';
 
 function ProductDetailsModal({ productId, onClose }) {
   const [loading, setLoading] = useState(true);
@@ -8,6 +9,7 @@ function ProductDetailsModal({ productId, onClose }) {
   const [wishlist, setWishlist] = useState(false);
   const [saving, setSaving] = useState(false);
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const { userId, startConversation } = useChat();
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -128,9 +130,19 @@ function ProductDetailsModal({ productId, onClose }) {
                   {wishlist ? <FaHeart /> : <FaRegHeart />}
                   {wishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
                 </button>
-                <button className="productdetails-modal-convo-btn" onClick={() => alert('Start conversation feature coming soon!')}>
-                  <FaComments />
-                  Start Conversation
+                <button
+                  className="productdetails-modal-convo-btn"
+                  onClick={async () => {
+                    const conv = await startConversation({
+                      product_id: product.product_id,
+                      request_id: null, // assuming this is a product, not a request
+                      seller_id: product.seller_id,
+                      buyer_id: userId || null
+                    });
+                    // optionally auto‐join is handled in ChatContext effect
+                  }}
+                >
+                  <FaComments /> Start Conversation
                 </button>
               </div>
             </div>

@@ -16,6 +16,8 @@ function RegisterPage({ setAuth, setRole }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmedPassword) {
@@ -32,7 +34,7 @@ function RegisterPage({ setAuth, setRole }) {
       formData.append('location', location);
       if (image) formData.append('image', image);
 
-      const res = await fetch('$VITE_API_BASE_URL/users/auth/register/users', {
+      const res = await fetch(`${API_BASE_URL}/users/auth/register/users`, {
         method: 'POST',
         body: formData
       });

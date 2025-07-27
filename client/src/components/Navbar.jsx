@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaBell, FaHistory, FaComments, FaUserCircle, FaStore, FaHeart, FaBars, FaTimes, FaLock } from 'react-icons/fa';
 import { jwtDecode } from 'jwt-decode';
+import { useChat } from '../context/ChatContext';
 import './Navbar.css';
 
 function Navbar({ setIsAuthenticated, setRole }) {
@@ -10,6 +11,17 @@ function Navbar({ setIsAuthenticated, setRole }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const profileTimeout = useRef(null);
 
+  const { conversations, loadConversations } = useChat();
+  useEffect(() => {
+    loadConversations();
+  }, []);
+
+  //total unread messages across all conversations
+  const unreadCount = conversations.reduce(
+    (sum, conv) => sum + Number(conv.unread_count || 0),
+    0
+  );
+  //console.log('Unread messages:', unreadCount);
   // Get user info from JWT
   const token = localStorage.getItem('token');
   let username = 'User';
@@ -58,6 +70,8 @@ function Navbar({ setIsAuthenticated, setRole }) {
   // Close dropdown on outside click (mobile)
   window.onclick = () => setProfileOpen(false);
 
+  
+
   return (
     <nav className="navbar">
       <div className="navbar-logo" onClick={() => handleNav('/user/home')}>
@@ -88,8 +102,13 @@ function Navbar({ setIsAuthenticated, setRole }) {
           <FaHistory />
           <span>History</span>
         </button>
-        <button title="Messages" onClick={() => handleNav('/user/messages')}>
+        <button
+          title="Messages"
+          onClick={() => handleNav('/user/messages')}
+          className="navbar-msg-btn"
+        >
           <FaComments />
+          {unreadCount > 0 && <span className="msg-badge">{unreadCount}</span>}
           <span>Messages</span>
         </button>
         <div

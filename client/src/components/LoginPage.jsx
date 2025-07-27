@@ -32,7 +32,9 @@ function LoginPage({ setAuth, setRole }) {
       if (res.ok && data.token) {
         console.log('Login successful:', data);
         localStorage.setItem('token', data.token);
+        // store user_id for chat context
         const decoded = jwtDecode(data.token);
+        localStorage.setItem('user_id', decoded.user_id);
         setAuth(true);
         setRole(decoded.class);
         console.log('Decoded token:', decoded.class);

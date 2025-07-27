@@ -4,6 +4,7 @@ import RequestCard from '../RequestCard';
 import MyRequestDetailsModal from './MyRequestDetailsModal';
 import AllRequestDetailsModal from '../AllRequestDetailsModal';
 import LoadingSpinner from '../LoadingSpinner';
+import { useChat } from '../../context/ChatContext';
 import './RequestsPage.css';
 
 function RequestsPage() {
@@ -12,6 +13,7 @@ function RequestsPage() {
   const [allRequests, setAllRequests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState(null);
+  const { userId, startConversation } = useChat();
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const token = localStorage.getItem('token');
@@ -42,9 +44,15 @@ function RequestsPage() {
   };
 
   // Handle start conversation (implement logic as needed)
-  const handleStartConversation = (details) => {
+  const handleStartConversation = async (details) => {
     // You can implement your conversation logic here
-    alert(`Start conversation with ${details.requester_name} about "${details.title}"`);
+    // alert(`Start conversation with ${details.requester_name} about "${details.title}"`);
+    await startConversation({
+      product_id: null, // Assuming this is a request, not a product
+      request_id: details.request_id,
+      seller_id: userId || null,
+      buyer_id: details.requester_id || null
+    });
   };
 
   return (

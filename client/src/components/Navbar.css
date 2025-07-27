@@ -222,6 +222,20 @@
   color: #38bdf8;
 }
 
+.navbar-msg-btn {
+  position: relative;
+}
+.msg-badge {
+  position: absolute;
+  top: 2px; right: 8px;
+  background: #ff3860;
+  color: white;
+  font-size: 0.65rem;
+  padding: 2px 5px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
 @media (max-width: 800px) {
   .profile-dropdown {
     position: static;

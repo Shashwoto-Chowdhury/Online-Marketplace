@@ -47,5 +47,26 @@ router.get('/get/seller', authorize, async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+router.post('/create', authorize, async (req, res) => {
+    const { reviewed_person_id, review_type, rating, comment } = req.body;
+    const reviewer_id = req.user.user_id;
+
+    if (!reviewed_person_id || !review_type || !rating) {
+        return res.status(400).json({ message: 'Required fields are missing' });
+    }
+    const currentDate = new Date();
+    try {
+        const newReview = await pool.query(`
+            INSERT INTO "Review" (reviewed_person_id, reviewer_id, review_type, rating, comment, created_at)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING *
+        `, [reviewed_person_id, reviewer_id, review_type, rating, comment, currentDate]);
+
+        res.status(201).json(newReview.rows[0]);
+    } catch (error) {
+        console.error('Error creating review:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 module.exports = router;
