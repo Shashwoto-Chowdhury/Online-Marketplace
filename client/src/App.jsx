@@ -11,8 +11,10 @@ import RequestsPage from './components/user/RequestsPage';
 import HistoryPage from './components/user/HistoryPage';
 import MyReviewsPage from './components/user/MyReviewsPage';
 import OfferPage from './components/user/OfferPage';
+import ProfileVisit from './components/user/ProfileVisit';
 import AdminNavbar from './components/admin/AdminNavbar';
 import AdminDashboard from './components/admin/Dashboard';
+
 import { useState, useEffect, Fragment } from 'react';
 import {jwtDecode} from 'jwt-decode';
 import { ToastContainer, toast } from 'react-toastify';
@@ -150,8 +152,12 @@ function App() {
                 isAuthenticated ? role === 'user' ? <OfferPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
               }
             />
-            <Route path="/user/messages" element={<ConversationsPage />} />
-            <Route path="/user/chat/:id" element={<ChatWindow />} />
+            <Route
+              path="/user/profilevisit/:userId"
+              element={ isAuthenticated ? role === 'user' ? <ProfileVisit /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />}
+            />
+            <Route path="/user/messages" element={ isAuthenticated ? role ==='user' ? <ConversationsPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />} />
+            <Route path="/user/chat/:id" element={ isAuthenticated ? role ==='user' ? <ChatWindow /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />} />
 
             {/* Admin Routes */}
             <Route

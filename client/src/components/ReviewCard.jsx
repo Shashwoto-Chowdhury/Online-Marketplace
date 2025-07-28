@@ -1,6 +1,8 @@
 import React from 'react';
 import { FaUser, FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
 import './ReviewCard.css';
+import { useNavigate } from 'react-router-dom';
+import { useChat } from '../context/ChatContext';
 
 function StarProgress({ rating, max = 5 }) {
   const stars = [];
@@ -17,18 +19,26 @@ function StarProgress({ rating, max = 5 }) {
 }
 
 function ReviewCard({ review }) {
+  const { userId } = useChat(); 
+  const navigate = useNavigate();
+  const goToProfile = () => {
+    if(review.reviewer_id !== userId) {
+      navigate(`/user/profilevisit/${review.reviewer_id}`);
+    }
+    else{
+      navigate('/user/details');
+    }
+  }
   return (
     <div className="reviewcard-container">
       <div className="reviewcard-header">
-        <a
+        <div
           className="reviewcard-reviewer"
-          href="#"
-          title="Visit profile"
-          // onClick={...} // implement navigation later
+          onClick={goToProfile}
         >
           <FaUser style={{ marginRight: 6, color: '#38bdf8' }} />
           {review.reviewer_username}
-        </a>
+        </div>
         <span className="reviewcard-rating">
           <StarProgress rating={review.rating} />
         </span>

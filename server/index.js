@@ -18,6 +18,7 @@ app.use('/images/users',    express.static(path.join(__dirname, 'public/images/u
 
 app.use('/users', userRouter);
 app.use('/admin', adminRouter);
+app.use('/profilevisit', require('./router/profilevisit'));
 app.use('/users/conversations', convoRouter);
 
 // create a single HTTP server for both Express and Socket.io
@@ -28,11 +29,16 @@ const io = new Server(server, { cors: { origin: '*' } });
 app.set('io', io);
 
 io.on('connection', socket => {
-  socket.on('join', ({ conversationId }) => socket.join(`conv_${conversationId}`));
-  socket.on('leave',({ conversationId }) => socket.leave(`conv_${conversationId}`));
-  socket.on('sendMessage', msg => io.to(`conv_${msg.conversation_id}`).emit('newMessage', msg));
-  socket.on('markSold',    ({ conversation_id }) => io.to(`conv_${conversation_id}`).emit('sold'));
-  socket.on('markReceived',({ conversation_id }) => io.to(`conv_${conversation_id}`).emit('received'));
+  // allow client to join its personal room for notifications
+  socket.on('register', ({ userId }) => {
+    socket.join(`user_${userId}`);
+  });
+
+  socket.on('join',    ({ conversationId }) => socket.join(`conv_${conversationId}`));
+  socket.on('leave',   ({ conversationId }) => socket.leave(`conv_${conversationId}`));
+  socket.on('sendMessage',    msg => io.to(`conv_${msg.conversation_id}`).emit('newMessage', msg));
+  socket.on('markSold',       ({ conversation_id }) => io.to(`conv_${conversation_id}`).emit('sold'));
+  socket.on('markReceived',   ({ conversation_id }) => io.to(`conv_${conversation_id}`).emit('received'));
 });
 
 server.listen(PORT, () => {

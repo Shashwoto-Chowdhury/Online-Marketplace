@@ -169,14 +169,51 @@ router.put('/:id/received', authorize, async (req, res) => {
     const conversation_id = req.params.id;
     // pull request_id, seller_id & quantity from this conversation
     const convRes = await pool.query(
-      `SELECT request_id, seller_id, buyer_id, quantity, selling_price
+      `SELECT product_id, request_id, seller_id, buyer_id, quantity, selling_price
        FROM "Conversation" 
        WHERE conversation_id=$1`,
       [conversation_id]
     );
-    const { request_id, seller_id, buyer_id, quantity, selling_price } = convRes.rows[0];
+    const { product_id, request_id, seller_id, buyer_id, quantity, selling_price } = convRes.rows[0];
 
     // if it's request‐based, create a new Product from ProductRequest + convo data
+    if(product_id) {
+      // check if product exists
+      const productRes = await pool.query(
+        `SELECT quantity FROM "Product" WHERE product_id=$1`,
+        [product_id]
+      );
+      if (!productRes.rows.length) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+      const productQuantity = productRes.rows[0].quantity;
+      const newQuantity = productQuantity - quantity;
+      if( newQuantity == 0 ) {
+        const people = await pool.query(
+          `SELECT user_id FROM "WishlistItem" WHERE product_id=$1`,
+          [product_id]
+        );
+        await pool.query(
+          `DELETE FROM "WishlistItem" WHERE product_id=$1`,
+          [product_id]
+        );
+
+        // insert notifications and emit real-time for sold-out
+        for (const { user_id } of people.rows) {
+          const content = 'The product has been sold out';
+          await pool.query(
+            `INSERT INTO "ProductNotification"
+               (user_id, product_id, content, timestamp, is_read)
+             VALUES ($1, $2, $3, NOW(), false)`,
+            [user_id, product_id, content]
+          );
+          // emit to user's notification room
+          req.app.get('io')
+             .to(`user_${user_id}`)
+             .emit('newNotification', { product_id, content, timestamp: new Date() });
+        }
+      }
+    }
     if (request_id) {
       // load request details
       const reqRes = await pool.query(
@@ -266,6 +303,10 @@ router.delete('/:id/messages/:messageId', authorize, async (req, res) => {
     return res.sendStatus(204);
   } catch (error) {
     console.error('Error deleting message:', error);
+    if (error.code === 'P0001') {
+      console.log(error.message);
+      return res.status(400).json({ error: error.message });
+    }
     return res.status(500).json({ message: 'Internal server error' });
   }
 });

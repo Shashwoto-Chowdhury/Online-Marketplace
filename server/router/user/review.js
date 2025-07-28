@@ -56,13 +56,23 @@ router.post('/create', authorize, async (req, res) => {
     }
     const currentDate = new Date();
     try {
-        const newReview = await pool.query(`
-            INSERT INTO "Review" (reviewed_person_id, reviewer_id, review_type, rating, comment, created_at)
+        // insert review and also return the reviewer's name
+        const { rows } = await pool.query(`
+          WITH ins AS (
+            INSERT INTO "Review"
+              (reviewed_person_id, reviewer_id, review_type, rating, comment, created_at)
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *
+          )
+          SELECT
+            ins.*,
+            u.name AS reviewer_username
+          FROM ins
+          JOIN "User" u
+            ON u.user_id = ins.reviewer_id;
         `, [reviewed_person_id, reviewer_id, review_type, rating, comment, currentDate]);
 
-        res.status(201).json(newReview.rows[0]);
+        res.status(201).json(rows[0]);
     } catch (error) {
         console.error('Error creating review:', error);
         res.status(500).json({ message: 'Internal server error' });

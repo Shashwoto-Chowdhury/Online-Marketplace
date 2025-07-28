@@ -141,7 +141,7 @@ export function ChatProvider({ children }) {
     });
     const conv = await res.json();
     setCurrentConv(conv);
-    navigate('/user/chat');
+    navigate(`/user/chat/${conv.conversation_id}`);
     return conv;
   };
 
@@ -222,8 +222,13 @@ export function ChatProvider({ children }) {
         `${API}/users/conversations/${currentConv.conversation_id}/messages/${messageId}`,
         { method: 'DELETE', headers: { token } }
       );
-      if (!res.ok) throw new Error();
-      toast.success('Message deleted');
+      if (res.ok) {
+        toast.success('Message deleted');
+      }
+      else {
+        const err = await res.json();
+        toast.error(err.error || 'Failed to delete message');
+      }
     } catch {
       toast.error('Failed to delete message');
     }
@@ -265,6 +270,24 @@ export function ChatProvider({ children }) {
     return () => {
       socket.off('messageDeleted');
     };
+  }, [socket]);
+
+  // once socket+userId are set, register for notifications
+  useEffect(() => {
+    if (socket && userId) {
+      socket.emit('register', { userId });
+    }
+  }, [socket, userId]);
+
+  // listen for real-time notifications (sold-out toasts)
+  useEffect(() => {
+    if (!socket) return;
+    const handleNotification = ({ content }) => {
+      console.log('Notification received:', content);
+      toast.info(content);
+    };
+    socket.on('newNotification', handleNotification);
+    return () => socket.off('newNotification', handleNotification);
   }, [socket]);
 
   return (

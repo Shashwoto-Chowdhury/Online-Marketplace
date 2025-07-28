@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FaTimes, FaHeart, FaRegHeart, FaMapMarkerAlt, FaTag, FaUserCircle, FaComments, FaImage, FaSortAmountUp } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import './ProductDetailsModal.css';
 import { useChat } from '../context/ChatContext';
 
@@ -10,6 +11,7 @@ function ProductDetailsModal({ productId, onClose }) {
   const [saving, setSaving] = useState(false);
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const { userId, startConversation } = useChat();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -119,7 +121,12 @@ function ProductDetailsModal({ productId, onClose }) {
               <p className="productdetails-modal-description">{product.description}</p>
               <div className="productdetails-modal-seller">
                 <FaUserCircle style={{ marginRight: 6, color: '#38bdf8' }} />
-                <span>{product.seller_name}</span>
+                <button
+                  className="productdetails-modal-seller-btn"
+                  onClick={() => navigate(`/user/profilevisit/${product.seller_id}`)}
+                >
+                  {product.seller_name}
+                </button>
               </div>
               <div className="productdetails-modal-actions">
                 <button
