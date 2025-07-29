@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-start:    #181c24;
+  --bg-end:      #232946;
+  --card-start:  #232946;
+  --card-end:    #16161a;
+  --text-primary:#e0e7ef;
+  --text-muted:  #94a3b8;
+  --accent:      #38bdf8;
+  --success:     #16a34a;
+  --danger:      #dc2626;
+  --radius:      16px;
+}
+
+.rp-page {
+  background: linear-gradient(120deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.rp-container {
+  width: 100%;
+  max-width: 1000px;
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+}
+
+.rp-title {
+  text-align: center;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+.rp-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.rp-tab {
+  flex: 1;
+  text-align: center;
+  padding: 0.75rem 0;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.2s, border-bottom 0.2s;
+}
+
+.rp-tab.active {
+  color: var(--accent);
+  border-bottom: 3px solid var(--accent);
+}
+
+.rp-tab-icon {
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+
+.rp-loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.rp-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: linear-gradient(135deg, var(--card-start) 60%, var(--card-end) 100%);
+  border: 1px solid rgba(56,189,248,0.1);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+}
+
+.rp-table thead {
+  background: rgba(56,189,248,0.1);
+}
+
+.rp-table th,
+.rp-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.rp-table th {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.rp-table tbody tr {
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.rp-user-btn,
+.rp-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.rp-user-btn:hover,
+.rp-link-btn:hover {
+  text-decoration: underline;
+}
+
+.rp-message-content {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rp-status-cell {
+  min-width: 120px;
+}
+
+.rp-action-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.rp-btn {
+  background: none;
+  border: none;
+  padding: 0.3rem;
+  cursor: pointer;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  transition: background 0.2s;
+}
+
+.rp-btn-approve {
+  color: var(--success);
+}
+.rp-btn-approve:hover {
+  background: rgba(22,163,74,0.1);
+}
+
+.rp-btn-reject {
+  color: var(--danger);
+}
+.rp-btn-reject:hover {
+  background: rgba(220,38,38,0.1);
+}
+
+.rp-approved {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.rp-rejected {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.rp-btn-delete {
+  color: var(--accent);
+}
+.rp-btn-delete:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.rp-btn-delete:not(:disabled):hover {
+  color: var(--danger);
+  text-decoration: underline;
+}

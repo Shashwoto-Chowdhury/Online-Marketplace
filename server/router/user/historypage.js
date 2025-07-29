@@ -51,9 +51,11 @@ router.get('/boughtproducts', authorize, async (req, res) => {
 router.get('/selldetails', authorize, async (req, res) => {
     try {
         const { sell_id } = req.query;
-        const result = await pool.query(`SELECT sr.sell_id, p.product_id, p.title, p.price, p.location, c.name as category, s.name as subcategory, b.name as brand, sr.quantity, sr.selling_price, pi.image_url
+        const result = await pool.query(`SELECT sr.sell_id, p.product_id, sr.buyer_id, u1.name as "buyer_name", sr.seller_id, u2.name as "seller_name", p.title, p.price, p.location, c.name as category, s.name as subcategory, b.name as brand, sr.quantity, sr.selling_price, pi.image_url
                     FROM "SellRecord" sr
                     JOIN "Product" p ON sr.product_id = p.product_id 
+                    LEFT JOIN "User" u1 ON sr.buyer_id = u1.user_id
+                    LEFT JOIN "User" u2 ON sr.seller_id = u2.user_id
                     LEFT JOIN "ProductImage" pi ON p.product_id = pi.product_id
                     LEFT JOIN "Category" c ON p.category_id = c.category_id
                     LEFT JOIN "SubCategory" s ON p.sub_category_id = s.sub_category_id

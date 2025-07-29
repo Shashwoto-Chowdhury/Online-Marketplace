@@ -26,6 +26,14 @@ router.put('/update', authorize, async (req, res) => {
         const userId = req.user.user_id;
         const { name, location } = req.body;
 
+        const currentDetails = await pool.query(
+            `SELECT NAME, LOCATION FROM "User" WHERE user_id = $1`,
+            [userId]
+        );
+        if(currentDetails.rows[0].name === name && currentDetails.rows[0].location === location) {
+            return res.status(400).json({ error: 'No changes detected' });
+        }
+
         const result = await pool.query(
             `UPDATE "User" SET name = $1, location = $2 WHERE user_id = $3 RETURNING *`,
             [name, location, userId]

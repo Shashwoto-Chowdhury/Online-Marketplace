@@ -3,6 +3,7 @@ import { FaUser, FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
 import './ReviewCard.css';
 import { useNavigate } from 'react-router-dom';
 import { useChat } from '../context/ChatContext';
+import { jwtDecode } from 'jwt-decode';
 
 function StarProgress({ rating, max = 5 }) {
   const stars = [];
@@ -19,14 +20,21 @@ function StarProgress({ rating, max = 5 }) {
 }
 
 function ReviewCard({ review }) {
+  const token = localStorage.getItem('token');
+  const { class: role } = token ? jwtDecode(token) : { class: null };
   const { userId } = useChat(); 
   const navigate = useNavigate();
   const goToProfile = () => {
-    if(review.reviewer_id !== userId) {
-      navigate(`/user/profilevisit/${review.reviewer_id}`);
+    if (role === 'user'){
+      if (review.reviewer_id !== userId) {
+        navigate(`/user/profilevisit/${review.reviewer_id}`);
+      }
+      else{
+        navigate('/user/details');
+      }
     }
-    else{
-      navigate('/user/details');
+    else if (role === 'admin') {
+      navigate(`/admin/profilevisit/${review.reviewer_id}`);
     }
   }
   return (

@@ -14,7 +14,11 @@ import OfferPage from './components/user/OfferPage';
 import ProfileVisit from './components/user/ProfileVisit';
 import AdminNavbar from './components/admin/AdminNavbar';
 import AdminDashboard from './components/admin/Dashboard';
-
+import AuditPage from './components/admin/AuditPage';
+import ProfileVisitbyAdmin from './components/admin/ProfileVisitbyAdmin';
+import CompanyRequestPage from './components/admin/CompanyRequestPage';
+import ReportPage from './components/admin/ReportPage';
+import MyNotifications from './components/user/MyNotifications';
 import { useState, useEffect, Fragment } from 'react';
 import {jwtDecode} from 'jwt-decode';
 import { ToastContainer, toast } from 'react-toastify';
@@ -135,6 +139,12 @@ function App() {
               }
             />
             <Route
+              path="/user/notifications"
+              element={
+                isAuthenticated ? role === 'user' ? <MyNotifications /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
+              }
+            />
+            <Route
               path="/user/history"
               element={
                 isAuthenticated ? role === 'user' ? <HistoryPage /> : <Navigate to="/admin/dashboard" /> : <Navigate to="/" />
@@ -164,6 +174,30 @@ function App() {
               path="/admin/dashboard"
               element={
                 isAuthenticated ? role === 'admin' ? <AdminDashboard /> : <Navigate to="/user/home" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/admin/audit"
+              element={
+                isAuthenticated ? role === 'admin' ? <AuditPage /> : <Navigate to="/user/home" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/admin/profilevisit/:userId"
+              element={
+                isAuthenticated ? role === 'admin' ? <ProfileVisitbyAdmin /> : <Navigate to="/user/home" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/admin/upgraderequests"
+              element={
+                isAuthenticated ? role === 'admin' ? <CompanyRequestPage /> : <Navigate to="/user/home" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/admin/reports"
+              element={
+                isAuthenticated ? role === 'admin' ? <ReportPage /> : <Navigate to="/user/home" /> : <Navigate to="/" />
               }
             />
           </Routes>

@@ -18,7 +18,7 @@ module.exports = function(req, res, next) {
     const verify = jwt.verify(token, process.env.ADMIN_SECRET);
     console.log(verify);
 
-    req.user = verify; // Attach user info to request object
+    req.admin = verify; // Attach user info to request object
     next();
   } catch (err) {
     res.status(401).json({ msg: "Token is not valid" });

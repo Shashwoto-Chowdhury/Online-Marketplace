@@ -116,11 +116,17 @@ function UserDetails() {
     setUpgradeLoading(true);
     try {
       // This endpoint should be implemented later
-      await fetch(`${API_BASE_URL}/users/upgrade-request`, {
+      const res = await fetch(`${API_BASE_URL}/users/upgrade-request`, {
         method: 'POST',
         headers: { token },
       });
-      toast.success('Upgrade request sent to admin!');
+      if(res.ok){
+        toast.success('Upgrade request sent to admin!');
+      }
+      else {
+        const data = await res.json();
+        toast.error(data.error || 'Failed to send upgrade request');
+      }
     } catch {
       toast.error('Failed to send upgrade request');
     }

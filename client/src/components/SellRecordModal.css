@@ -72,3 +72,35 @@
   margin: 1em 0;
   color: #bfc9db;
 }
+
+/* filepath: [SellRecordModal.css](http://_vscodecontentref_/1) */
+
+/* row for buyer/seller info */
+.modal-user-row {
+  display: flex;
+  align-items: center;
+  margin: 0.75rem 0;
+}
+.modal-user-label {
+  color: #94a3b8;
+  margin-right: 6px;
+  font-size: 0.95rem;
+}
+
+/* pill‐style user buttons */
+.history-modal-user-btn {
+  background: linear-gradient(90deg, #4c67e4 0%, #38bdf8 100%);
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.history-modal-user-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}

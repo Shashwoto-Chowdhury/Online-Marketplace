@@ -46,6 +46,9 @@ const login = async (req, res) => {
     }
 
     const user = result.rows[0];
+    if( user.status === 'banned' ) {
+      return res.status(403).json({ error: 'Account is banned' });
+    }
     const valid = await bcrypt.compare(password, user.password);
 
     if (!valid) {

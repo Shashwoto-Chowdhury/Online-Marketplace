@@ -9,11 +9,10 @@ router.get('/productnotifications', authorize, async (req, res) => {
 
         // Fetch product notifications for the user
         const notificationsResult = await pool.query(`
-            SELECT DISTINCT ON(p.product_id) p.product_id, p.title, pi.image_url, n.notification_id,n.content, n.created_at
-            FROM "ProductNotification" n
-            JOIN "Product" p ON n.product_id = p.product_id
-            LEFT JOIN "ProductImage" pi ON p.product_id = pi.product_id
-            WHERE n.user_id = $1
+            SELECT pn.*, p.title
+            FROM "ProductNotification" pn
+            JOIN "Product" p ON pn.product_id = p.product_id
+            WHERE pn.user_id = $1
         `, [userId]);
 
         if (notificationsResult.rows.length === 0) {
@@ -28,12 +27,13 @@ router.get('/productnotifications', authorize, async (req, res) => {
 });
 router.get('/adminnotifications', authorize, async (req, res) => {
     try {
-        const userId = req.user.user_id;
+        // const userId = req.user.user_id;
 
         // Fetch admin notifications for the user
         const notificationsResult = await pool.query(`
-            SELECT notification_id, content, created_at
-            FROM "AdminNotification"
+            SELECT an.*, a.name AS admin_name
+            FROM "AdminNotification" an
+            JOIN "Admin" a ON an.admin_id = a.admin_id
         `);
 
         if (notificationsResult.rows.length === 0) {
@@ -43,6 +43,28 @@ router.get('/adminnotifications', authorize, async (req, res) => {
         res.status(200).json(notificationsResult.rows);
     } catch (err) {
         console.error('Error fetching admin notifications:', err);
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+});
+router.get('/adminusernotifications', authorize, async (req, res) => {
+    try {
+        const userId = req.user.user_id;
+
+        // Fetch notifications sent by the admin
+        const notificationsResult = await pool.query(`
+            SELECT an.*, a.name AS admin_name
+            FROM "AdminUserNotification" an
+            JOIN "Admin" a ON an.admin_id = a.admin_id
+            WHERE an.user_id = $1
+        `, [userId]);
+
+        if (notificationsResult.rows.length === 0) {
+            return res.status(404).json({ message: 'No notifications found' });
+        }
+
+        res.status(200).json(notificationsResult.rows);
+    } catch (err) {
+        console.error('Error fetching admin user notifications:', err);
         res.status(500).json({ error: 'Something went wrong' });
     }
 });

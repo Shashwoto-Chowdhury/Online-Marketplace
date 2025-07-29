@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-start:   #181c24;
+  --bg-end:     #232946;
+  --card-start: #232946;
+  --card-end:   #16161a;
+  --text:       #e0e7ef;
+  --muted:      #94a3b8;
+  --accent:     #38bdf8;
+  --radius:     16px;
+}
+
+.mn-page {
+  background: linear-gradient(120deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.mn-container {
+  width: 100%;
+  max-width: 600px;
+  background: linear-gradient(135deg, var(--card-start) 60%, var(--card-end) 100%);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+}
+
+.mn-header {
+  text-align: center;
+  font-size: 1.6rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.mn-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--muted);
+  margin-bottom: 1rem;
+}
+
+.mn-tab {
+  flex: 1;
+  text-align: center;
+  padding: 0.6rem 0;
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 500;
+  transition: color 0.2s, border-bottom 0.2s;
+}
+
+.mn-tab.active {
+  color: var(--accent);
+  border-bottom: 3px solid var(--accent);
+}
+
+.mn-loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.mn-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mn-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.mn-item:first-child {
+  border-top: none;
+}
+
+.mn-icon {
+  font-size: 1.4rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.mn-content {
+  flex: 1;
+}
+
+.mn-item-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.mn-item-text {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.mn-time {
+  color: var(--muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mn-empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 1rem
+}

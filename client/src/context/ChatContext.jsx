@@ -276,6 +276,7 @@ export function ChatProvider({ children }) {
   useEffect(() => {
     if (socket && userId) {
       socket.emit('register', { userId });
+      console.log('Socket registered with userId:', userId);
     }
   }, [socket, userId]);
 

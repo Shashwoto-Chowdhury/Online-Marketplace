@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-start:  #181c24;
+  --bg-end:    #232946;
+  --card-start:#232946;
+  --card-end:  #16161a;
+  --text:      #e0e7ef;
+  --text-muted:     #cbd5e1;
+  --accent:    #38bdf8;
+  --radius:    18px;
+}
+
+/* full-screen gradient background */
+.pv-page {
+  background: linear-gradient(120deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  padding: 2rem 1rem;
+}
+
+/* center container */
+.pv-container {
+  width: 100%;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+.pv-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+/* user card */
+.pv-user-card {
+  background: linear-gradient(135deg, var(--card-start) 60%, var(--card-end) 100%);
+  max-width: 500px;
+  border: 1px solid rgba(56,189,248,0.1);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+  text-align: center;
+  margin: 0 auto 2rem;
+}
+
+/* avatar */
+.pv-user-img img,
+.pv-default-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+.pv-default-avatar {
+  font-size: 90px;
+  color: var(--accent);
+}
+
+/* name */
+.pv-user-name {
+  font-size: 1.8rem;
+  color: var(--accent);
+  margin: 0.5rem 0 1rem;
+}
+
+/* info */
+.pv-user-info {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+.pv-user-info div {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* stats */
+.pv-user-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.pv-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.pv-label {
+  color: var(--accent);
+  font-weight: 600;
+}
+.pv-value {
+  color: #ffd700;
+  font-weight: 600;
+}
+.pv-star-row svg {
+  color: #ffd700;
+  margin-right: 2px;
+}
+
+/* tabs */
+.pv-tabs {
+  display: flex;
+  margin: 2rem 0 1rem;
+  border-bottom: 2px solid var(--text-muted);
+}
+.pv-tab {
+  flex: 1;
+  text-align: center;
+  padding: 0.6rem 0;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.2s, border-bottom 0.2s;
+}
+.pv-tab.active {
+  color: var(--accent);
+  border-bottom: 3px solid var(--accent);
+}
+
+/* reviews list */
+.pv-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.pv-no-rev {
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* modal overlay */
+.pv-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+/* modal window */
+.pv-modal {
+  background: linear-gradient(135deg, var(--card-start) 60%, var(--card-end) 100%);
+  color: var(--text);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+  font-family: 'Inter', sans-serif;
+}
+
+/* modal headings & labels */
+.pv-modal h4 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: var(--accent);
+}
+.pv-modal label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+/* inputs */
+.pv-modal select,
+.pv-modal textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border-radius: 6px;
+  border: 1.5px solid var(--accent);
+  background: var(--card-start);
+  color: var(--text);
+  font-size: 0.95rem;
+}
+.pv-modal textarea {
+  resize: vertical;
+}
+
+/* modal actions */
+.pv-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+.pv-modal-actions button {
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pv-modal-actions button:first-of-type {
+  background: var(--bg-end);
+  color: var(--text-muted);
+}
+.pv-modal-actions button:last-of-type {
+  background: var(--accent);
+  color: var(--text);
+}
+.pv-modal-actions button:last-of-type:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* admin ban user button */
+.pv-admin-action {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+/* ban button */
+.pv-ban-btn {
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: background 0.2s, transform 0.2s;
+}
+.pv-ban-btn:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* unban button */
+.pv-unban-btn {
+  background: #22c55e;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: background 0.2s, transform 0.2s;
+}
+.pv-unban-btn:hover:not(:disabled) {
+  background: #16a34a;
+  transform: translateY(-1px);
+}
+
+.pv-ban-btn:disabled,
+.pv-unban-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* banned state for ban button */
+.pv-ban-btn.banned {
+  background: #6b7280;       /* muted gray */
+  cursor: not-allowed;
+}
+.pv-ban-btn.banned:hover {
+  background: #6b7280;       /* muted gray */
+}

@@ -203,8 +203,8 @@ router.put('/:id/received', authorize, async (req, res) => {
           const content = 'The product has been sold out';
           await pool.query(
             `INSERT INTO "ProductNotification"
-               (user_id, product_id, content, timestamp, is_read)
-             VALUES ($1, $2, $3, NOW(), false)`,
+               (user_id, product_id, content, timestamp)
+             VALUES ($1, $2, $3, NOW())`,
             [user_id, product_id, content]
           );
           // emit to user's notification room
