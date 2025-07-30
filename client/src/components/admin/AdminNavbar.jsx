@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUserShield, FaClipboardList, FaChartBar, FaUserCircle, FaChevronUp } from 'react-icons/fa';
+import { FiSend } from 'react-icons/fi';
 import './AdminNavbar.css';
 
 function AdminNavbar({ setIsAuthenticated, setRole }) {
@@ -33,7 +34,7 @@ function AdminNavbar({ setIsAuthenticated, setRole }) {
   };
   const handleProfileClick = (e) => {
     e.stopPropagation();
-    setProfileOpen((open) => !open);
+    setProfileOpen(open => !open);
   };
   window.onclick = () => setProfileOpen(false);
 
@@ -55,6 +56,10 @@ function AdminNavbar({ setIsAuthenticated, setRole }) {
         <button onClick={() => handleNav('/admin/upgraderequests')}>
           <FaChevronUp />
           <span>Upgrade Requests</span>
+        </button>
+        <button onClick={() => handleNav('/admin/broadcast')}>
+          <FiSend />
+          <span>Broadcast</span>
         </button>
         <div
           className="admin-profile-dropdown-wrapper"

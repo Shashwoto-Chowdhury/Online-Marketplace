@@ -32,6 +32,7 @@ router.get('/', authorize, async (req, res) => {
 // create or return existing product convo
 router.post('/', authorize, async (req, res) => {
   const { product_id, request_id, seller_id, buyer_id } = req.body;
+  const userId = req.user.user_id;
   // const buyer_id = req.user.user_id;
   // find existing
   if(!product_id && !request_id) {
@@ -40,17 +41,32 @@ router.post('/', authorize, async (req, res) => {
   if(product_id) {
     let conv = await pool.query(
       `SELECT * FROM "Conversation"
-      WHERE buyer_id=$1 AND seller_id=$2 AND product_id=$3`,
+       WHERE buyer_id=$1 AND seller_id=$2 AND product_id=$3`,
       [buyer_id, seller_id, product_id]
     );
     if (conv.rows.length) return res.json(conv.rows[0]);
-    // create new
+
     const ins = await pool.query(
       `INSERT INTO "Conversation"(buyer_id,seller_id,product_id,status)
-      VALUES($1,$2,$3,'open') RETURNING *`,
+       VALUES($1,$2,$3,'open') RETURNING *`,
       [buyer_id, seller_id, product_id]
     );
-    res.status(201).json(ins.rows[0]);
+
+    // fetch inserted convo with product title and user names
+    const full = await pool.query(
+      `SELECT 
+         c.*,
+         p.title        AS product_title,
+         u1.name        AS buyer_name,
+         u2.name        AS seller_name
+       FROM "Conversation" c
+       JOIN "User" u1   ON c.buyer_id = u1.user_id
+       JOIN "User" u2   ON c.seller_id = u2.user_id
+       JOIN "Product" p ON c.product_id = p.product_id
+       WHERE c.conversation_id = $1`,
+      [ins.rows[0].conversation_id]
+    );
+    return res.status(201).json(full.rows[0]);
   }
   if(request_id) {
     console.log(buyer_id, seller_id, request_id);

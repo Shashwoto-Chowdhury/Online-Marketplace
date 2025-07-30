@@ -15,7 +15,7 @@ export default function ChatWindow() {
   const { conversations, loadConversations, setCurrentConv } = useChat();
   const [draft, setDraft] = useState('');
   const bottomRef = useRef();
-
+  const name = currentConv?.buyer_id === userId ? currentConv.seller_name : currentConv.buyer_name;
   // modal states
   const [showSoldModal, setShowSoldModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -69,7 +69,7 @@ export default function ChatWindow() {
           <h3>
             <FiTag size={22} className="chat-header-icon"/>
             <span className="chat-header-title">
-              Chat about {currentConv.product_title || currentConv.request_title}
+              Chat about {currentConv.product_title || currentConv.request_title} ({name})
             </span>
           </h3>
           {currentConv.sold_button_clicked ? (

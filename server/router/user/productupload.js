@@ -20,6 +20,14 @@ router.post('/:folder', authorize, upload.array('images', 5), async (req, res) =
         const parsedQuantity = parseInt(quantity);
         console.log("check: ", { category_id, sub_category_id, brand_id, price, quantity });
         console.log("Check: ", { parsedCategory, parsedSubcategory, parsedBrand, parsedPrice, parsedQuantity });
+        const result = await pool.query(`
+            SELECT type FROM "User" WHERE user_id = $1
+        `, [seller_id]);
+        const userType = result.rows[0].type;
+        if(userType !== 'company' && parsedQuantity > 1) {
+            return res.status(400).json({ error: 'Only companies can sell more than one item at a time.' });
+        }
+
         // 1. Insert product into "Product" table
         const productResult = await pool.query(`INSERT INTO "Product" (title, description, price, location, category_id, sub_category_id, brand_id, seller_id, quantity, posted_at)VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING product_id`, [title, description, parsedPrice, location, parsedCategory, parsedSubcategory, parsedBrand, seller_id, parsedQuantity, posted_at]);
 

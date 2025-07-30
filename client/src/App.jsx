@@ -19,6 +19,8 @@ import ProfileVisitbyAdmin from './components/admin/ProfileVisitbyAdmin';
 import CompanyRequestPage from './components/admin/CompanyRequestPage';
 import ReportPage from './components/admin/ReportPage';
 import MyNotifications from './components/user/MyNotifications';
+import BroadcastNotification from './components/admin/BroadcastNotification';
+import UserlistPage from './components/admin/UserlistPage';
 import { useState, useEffect, Fragment } from 'react';
 import {jwtDecode} from 'jwt-decode';
 import { ToastContainer, toast } from 'react-toastify';
@@ -198,6 +200,18 @@ function App() {
               path="/admin/reports"
               element={
                 isAuthenticated ? role === 'admin' ? <ReportPage /> : <Navigate to="/user/home" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/admin/broadcast"
+              element={
+                isAuthenticated ? role === 'admin' ? <BroadcastNotification /> : <Navigate to="/user/home" /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/admin/userlist"
+              element={
+                isAuthenticated ? role === 'admin' ? <UserlistPage /> : <Navigate to="/user/home" /> : <Navigate to="/" />
               }
             />
           </Routes>

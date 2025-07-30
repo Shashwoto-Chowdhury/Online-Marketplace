@@ -3,6 +3,7 @@ import { FiBox, FiMessageSquare, FiCheck, FiX, FiTrash } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../LoadingSpinner';
 import { toast } from 'react-toastify';
+import ReportProductDetailsModal from './ProductDetails';
 import './ReportPage.css';
 
 export default function ReportPage() {
@@ -10,6 +11,7 @@ export default function ReportPage() {
   const [loading, setLoading] = useState(true);
   const [productReports, setProductReports] = useState([]);
   const [messageReports, setMessageReports] = useState([]);
+  const [selectedProductId, setSelectedProductId] = useState(null);
   const navigate = useNavigate();
   const API = import.meta.env.VITE_API_BASE_URL;
   const token = localStorage.getItem('token');
@@ -118,7 +120,10 @@ export default function ReportPage() {
                   <td>
                     {r.product_id
                       ? (
-                        <button className="rp-link-btn" onClick={() => { /* open modal later */ }}>
+                        <button
+                          className="rp-link-btn"
+                          onClick={() => setSelectedProductId(r.product_id)}
+                        >
                           {r.product_title}
                         </button>
                       )
@@ -226,6 +231,13 @@ export default function ReportPage() {
           </table>
         )}
       </div>
+      {/* product details modal */}
+      {selectedProductId && (
+        <ReportProductDetailsModal
+          productId={selectedProductId}
+          onClose={() => setSelectedProductId(null)}
+        />
+      )}
     </div>
   );
 }
