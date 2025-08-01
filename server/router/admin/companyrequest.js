@@ -50,6 +50,10 @@ router.post('/approve', adminAuthorize, async (req, res) => {
             `UPDATE "User" SET type = 'company' WHERE user_id = $1`,
             [userId]
         );
+        await pool.query(
+            `INSERT INTO "Company" (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING`,
+            [userId]
+        );
         const timestamp = new Date().toISOString();
         const content = 'Admin approved your company upgrade request';
 
