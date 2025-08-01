@@ -50,8 +50,17 @@ function OfferPage({ setIsAuthenticated, setRole }) {
   };
 
   const handleCreate = (newOffer) => {
-    setOffers(prev => [newOffer, ...prev]);
+    // close the modal first
     setShowCreateModal(false);
+
+    // // Option A: guard the spread so prev is always an array
+    // setOffers(prev => {
+    //   const list = Array.isArray(prev) ? prev : [];
+    //   return [ newOffer, ...list ];
+    // });
+
+    // Option B (stronger): re-fetch from the server to get a fresh, guaranteed array
+    fetchOffers();
   };
 
   const handleUpdate = (updated) => {
