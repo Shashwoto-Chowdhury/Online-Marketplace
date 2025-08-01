@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import './CoverPage.css';
+import './Coverpage.css';
 import bannerImage from '../assets/market-banner.jpg'; // this will be used as background
 import mascotImage from '../assets/undraw_domain-names_f0ge.svg'; // this will be used as a mascot image
 function CoverPage() {
