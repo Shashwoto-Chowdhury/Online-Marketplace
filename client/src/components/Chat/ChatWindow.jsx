@@ -15,7 +15,7 @@ export default function ChatWindow() {
   const { conversations, loadConversations, setCurrentConv } = useChat();
   const [draft, setDraft] = useState('');
   const bottomRef = useRef();
-  const name = currentConv?.buyer_id === userId ? currentConv.seller_name : currentConv.buyer_name;
+  
   // modal states
   const [showSoldModal, setShowSoldModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -61,7 +61,7 @@ export default function ChatWindow() {
     setReportDetails('');
     setShowReportModal(true);
   };
-
+  const name = currentConv?.buyer_id === userId ? currentConv.seller_name : currentConv.buyer_name;
   return (
     <div className="chat-page-container dark-theme">
       <div className="chat-window">

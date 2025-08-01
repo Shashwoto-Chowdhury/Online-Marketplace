@@ -11,7 +11,6 @@ router.get('/', authorize, async (req, res) => {
        c.*, p.title AS product_title,r.title AS request_title,
        u1.name AS buyer_name,
        u2.name AS seller_name,
-       /* count unread msgs not sent by me */
        (SELECT COUNT(*) FROM "Message" m
          WHERE m.conversation_id=c.conversation_id
            AND m.sender_id<>$1
@@ -40,8 +39,16 @@ router.post('/', authorize, async (req, res) => {
   }
   if(product_id) {
     let conv = await pool.query(
-      `SELECT * FROM "Conversation"
-       WHERE buyer_id=$1 AND seller_id=$2 AND product_id=$3`,
+      `SELECT 
+         c.*,
+         p.title        AS product_title,
+         u1.name        AS buyer_name,
+         u2.name        AS seller_name
+       FROM "Conversation" c
+       JOIN "User" u1   ON c.buyer_id = u1.user_id
+       JOIN "User" u2   ON c.seller_id = u2.user_id
+       JOIN "Product" p ON c.product_id = p.product_id
+       WHERE c.buyer_id=$1 AND c.seller_id=$2 AND c.product_id=$3`,
       [buyer_id, seller_id, product_id]
     );
     if (conv.rows.length) return res.json(conv.rows[0]);
